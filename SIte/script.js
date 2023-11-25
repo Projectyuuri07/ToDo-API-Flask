@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const apiUrl = 'http://10.109.142.49:5000'; //Insira o Url da sua API
+    const apiUrl = 'https://api.azevedoyuuri.repl.co'; //Insira o Url da sua API
     const tabela = document.querySelector(".tabela-js");
 
     // Obtenha os dados da API e insira-os na tabela
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   console.error(error);
               });
         });
-    
+
     // Exclua uma tarefa
     document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.addEventListener("click", function (e) {
@@ -60,41 +60,40 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Defina o ID e a tarefa quando o botão de edição é clicado
-    document.querySelector(".tabela-js").addEventListener("click", function (e) {
-        const editBtn = e.target.closest(".edit-btn");
-        if (editBtn) {
-            const row = editBtn.closest("tr");
-            const id = row.querySelector(".id").textContent;
-            const tarefa = row.querySelector(".tarefa").textContent;
-            document.querySelector("#edit-tarefa").value = tarefa;
-        }
-    });
+      document.querySelector(".tabela-js").addEventListener("click", function (e) {
+          const editBtn = e.target.closest(".edit-btn");
+          if (editBtn) {
+              const row = editBtn.closest("tr");
+              const id = row.querySelector(".id").textContent;
+              const tarefa = row.querySelector(".tarefa").textContent;
+              document.querySelector("#edit-tarefa").value = tarefa;
 
-    // Atualize uma tarefa
     document.querySelector("#edit-tarefa-btn").addEventListener("click", function () {
-        const tarefaupdate = document.querySelector("#edit-tarefa").value;
-        const id = document.querySelector(".id").textContent;
-        
-        if (id) {
-            axios.put(`${apiUrl}/update/${id}`, { Tarefa: tarefaupdate })
-                .then(function () {
-                    CarregarTarefas();
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
-        }
+      const novaTarefa = document.querySelector("#edit-tarefa").value;
+      editarTarefa(id, novaTarefa);
     });
-  }
+          }});
 
-// Função para recarregar as tarefas
-function CarregarTarefas() {
-    axios.get(`${apiUrl}/list`)
-        .then(function (resposta) {
-            getData(resposta.data);
-        })
-        .catch(function (error) {
-            console.error(error);
-        });
-      }
+    // Editar uma tarefa
+    function editarTarefa(id, novaTarefa) {
+        axios.put(`${apiUrl}/update/${id}`, { Tarefa: novaTarefa })
+            .then(function () {
+                 CarregarTarefas();
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+
+    // Função para recarregar as tarefas
+    function CarregarTarefas() {
+        axios.get(`${apiUrl}/list`)
+            .then(function (resposta) {
+                getData(resposta.data);
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+          }
+    }
 });
